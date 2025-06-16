@@ -91,8 +91,32 @@ exports.getPropertyDetail = async (req, res) => {
     }
 };
 
-exports.getPropertiesByCategoryName = async (req, res) => {
-    const { categoryName } = req.params;
+// exports.getPropertiesByCategoryName = async (req, res) => {
+//     const { categoryName } = req.params;
+
+//     try {
+//     const result = await pool.query(`
+//         SELECT
+//         p.id_property,
+//         p.title,
+//         p.price_per_night,
+//         COALESCE(AVG(r.rating), 0) AS avg_rating,
+//         pp.image_url AS cover_image
+//         FROM properties p
+//         LEFT JOIN reviews r ON p.id_property = r.property_id
+//         LEFT JOIN property_photos pp ON p.id_property = pp.property_id AND pp.is_cover = true
+//         JOIN categories c ON p.category_id = c.id_category
+//         WHERE LOWER(c.name) = LOWER($1)
+//         GROUP BY p.id_property, pp.image_url`, [categoryName]);
+
+//     res.json(result.rows);
+//     } catch (err) {
+//     res.status(500).json({ error: err.message });
+//     } 
+// };
+
+exports.getPropertiesByCategory = async (req, res) => {
+    const categoryName = req.params.categoryName;
 
     try {
     const result = await pool.query(`
@@ -101,19 +125,26 @@ exports.getPropertiesByCategoryName = async (req, res) => {
         p.title,
         p.price_per_night,
         COALESCE(AVG(r.rating), 0) AS avg_rating,
-        pp.image_url AS cover_image
+        (
+            SELECT image_url
+            FROM property_photos
+            WHERE property_id = p.id_property AND is_cover = true
+            LIMIT 1
+        ) AS cover_img
         FROM properties p
         LEFT JOIN reviews r ON p.id_property = r.property_id
-        LEFT JOIN property_photos pp ON p.id_property = pp.property_id AND pp.is_cover = true
         JOIN categories c ON p.category_id = c.id_category
         WHERE LOWER(c.name) = LOWER($1)
-        GROUP BY p.id_property, pp.image_url`, [categoryName]);
+        GROUP BY p.id_property
+    `, [categoryName]);
 
-    res.json(result.rows);
-    } catch (err) {
-    res.status(500).json({ error: err.message });
-    } 
+    res.status(200).json(result.rows);
+    }  catch (error) {
+    console.error("Error getPropertiesByCategory:", error);
+    res.status(500).json({ error: 'Terjadi kesalahan saat mengambil properti berdasarkan kategori' });
+    }
 };
+
 
 // exports.filterProperties = async (req, res) => {
 //     const { location, check_in, check_out, guests } = req.query;
