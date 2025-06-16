@@ -7,8 +7,8 @@ const { verifyToken } = require('../middlewares/authmiddleware');
 // Properti dan search
 router.get('/properties/filter', guestController.filterProperties);
 router.get('/all-properties', guestController.getGuestProperties);
-router.get ('/properties/:id', guestController.getPropertyDetail);
-router.get('/properties/category/:categoryName', guestController.getPropertiesByCategoryName);
+router.get('/properties/:id', guestController.getPropertyDetail);
+router.get('/properties/category/:categoryName', guestController.getPropertiesByCategory);
 
 
 //Booking
