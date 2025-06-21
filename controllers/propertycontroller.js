@@ -69,7 +69,7 @@ exports.getHostProperties = async (req, res) => {
         p.updated_at,
         c.name AS category_name,
         (
-            SELECT url 
+            SELECT image_url 
             FROM property_photos 
             WHERE property_photos.property_id = p.id_property
             ORDER BY id_photo ASC 
