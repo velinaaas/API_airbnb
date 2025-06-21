@@ -56,18 +56,25 @@ exports.getHostProperties = async (req, res) => {
         `SELECT 
             p.id_property,
             p.title,
-            p.description,
-            p.price_per_night,
-            p.address,
-            p.latitude,
-            p.longitude,
-            p.bedrooms,
-            p.bathrooms,
-            p.max_guests,
-            p.is_active,
-            p.created_at,
-            p.updated_at,
-            c.name AS category_name
+        p.description,
+        p.price_per_night,
+        p.address,
+        p.latitude,
+        p.longitude,
+        p.bedrooms,
+        p.bathrooms,
+        p.max_guests,
+        p.is_active,
+        p.created_at,
+        p.updated_at,
+        c.name AS category_name,
+        (
+            SELECT url 
+            FROM property_photos 
+            WHERE property_photos.property_id = p.id_property
+            ORDER BY id_photo ASC 
+            LIMIT 1
+            ) AS cover_photo
         FROM properties p
         LEFT JOIN categories c ON p.category_id = c.id_category
         WHERE p.user_id = $1
