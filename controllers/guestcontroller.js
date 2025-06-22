@@ -54,7 +54,7 @@ exports.getPropertyDetail = async (req, res) => {
         LEFT JOIN reviews r ON r.property_id = p.id_property
         JOIN users u ON u.id_user = p.user_id
         WHERE p.id_property = $1
-        GROUP BY p.id_property, u.name, u.email`, [propertyId]);
+        GROUP BY p.id_property, u.name, u.email, u.phone_number`, [propertyId]);
 
     if (propertyResult.rows.length === 0) {
         return res.status(404).json({ error: 'Properti tidak ditemukan' });
