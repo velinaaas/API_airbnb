@@ -77,7 +77,7 @@ exports.getHostProperties = async (req, res) => {
             ) AS cover_photo
         FROM properties p
         LEFT JOIN categories c ON p.category_id = c.id_category
-        WHERE p.user_id = $1
+        WHERE p.user_id = $1 AND p.is_active = true
         ORDER BY p.created_at DESC`,
         [userId]
     );
