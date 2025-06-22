@@ -48,7 +48,8 @@ exports.getPropertyDetail = async (req, res) => {
         p.longitude,
         COALESCE(AVG(r.rating), 0) AS average_rating,
         u.name AS host_name,
-        u.email AS host_email
+        u.email AS host_email,
+        u.phone_number AS host_phone_number
         FROM properties p
         LEFT JOIN reviews r ON r.property_id = p.id_property
         JOIN users u ON u.id_user = p.user_id
